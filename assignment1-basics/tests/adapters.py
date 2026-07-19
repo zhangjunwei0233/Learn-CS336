@@ -589,10 +589,12 @@ def run_train_bpe(
                 representing that <token1> was merged with <token2>.
                 Merges are ordered by order of creation.
     """
-    from cs336_basics.bpe_tokenizer_vanilla import train_bpe_tokenizer
+    from cs336_basics.bpe_tokenizer_vanilla import train_bpe_tokenizer as vanilla_bpe_tokenizer
+    from cs336_basics.bpe_tokenizer_optimized import train_bpe_tokenizer as optimized_bpe_tokenizer
 
-    return train_bpe_tokenizer(
+    return optimized_bpe_tokenizer(
         input_path=input_path,
         vocab_size=vocab_size,
-        special_tokens=special_tokens
+        special_tokens=special_tokens,
+        **kwargs
     )

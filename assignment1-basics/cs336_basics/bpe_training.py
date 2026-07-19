@@ -1,22 +1,27 @@
 import pickle
 from pathlib import Path
 
-from cs336_basics.bpe_tokenizer_vanilla import train_bpe_tokenizer
+from cs336_basics.bpe_tokenizer_vanilla import train_bpe_tokenizer as vanilla_bpe_tokenizer
+from cs336_basics.bpe_tokenizer_optimized import train_bpe_tokenizer as optimized_bpe_tokenizer
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
-TRAINING_DATA = PROJECT_ROOT / "data" / "TinyStoriesV2-GPT4-valid.txt"
+TRAINING_DATA = PROJECT_ROOT / "data" / "owt_train.txt"
 OUTPUT_DIRECTORY = PROJECT_ROOT / "artifacts"
-VOCAB_OUTPUT = OUTPUT_DIRECTORY / "tinystories_vocab.pkl"
-MERGES_OUTPUT = OUTPUT_DIRECTORY / "tinystories_merges.pkl"
+# VOCAB_OUTPUT = OUTPUT_DIRECTORY / "openwebtext_vocab.pkl"
+# MERGES_OUTPUT = OUTPUT_DIRECTORY / "openwebtext_merges.pkl"
+VOCAB_OUTPUT = OUTPUT_DIRECTORY / "owt_vocab.pkl"
+MERGES_OUTPUT = OUTPUT_DIRECTORY / "owt_merges.pkl"
 
 
 def main() -> None:
-    vocab, merges = train_bpe_tokenizer(
+    vocab, merges = optimized_bpe_tokenizer(
         input_path=TRAINING_DATA,
-        vocab_size=10000,
+        vocab_size=32000,
         special_tokens=["<|endoftext|>"],
+        num_processes=16,
         profile=True,
+        log_step=1000
     )
 
     longest_token = max(vocab.values(), key=len)
